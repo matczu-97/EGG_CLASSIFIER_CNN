@@ -117,7 +117,7 @@ def create_cnn_model(input_shape):
     model.compile(
         optimizer=optimizer,
         loss='binary_crossentropy',
-        metrics=['accuracy']
+        metrics=['accuracy', keras.metrics.Precision(), keras.metrics.Recall()]
     )
 
     model.summary()
@@ -147,18 +147,18 @@ def plot_confusion_matrix(cm, title, filename):
 def plot_metrics(metrics_dict, model_name):
     """Plot and save performance metrics."""
     plt.figure(figsize=(10, 6))
-    metrics = ['Accuracy']
+    metrics = ['Precision', 'Recall', 'Accuracy']
     values = [metrics_dict[m.lower()] for m in metrics]
 
-    bars = plt.bar(metrics, values, color=['#9b59b6'])
+    bars = plt.bar(metrics, values, color=['#2ecc71', '#3498db', '#9b59b6'])
     plt.ylim(0, 1.0)
     plt.title(f'{model_name} Performance Metrics')
 
     for bar in bars:
         height = bar.get_height()
-        plt.text(bar.get_x() + bar.get_width() / 2., height,
-                 f'{height:.3f}',
-                 ha='center', va='bottom')
+        plt.text(bar.get_x() + bar.get_width()/2., height,
+                f'{height:.3f}',
+                ha='center', va='bottom')
 
     plt.tight_layout()
     filepath = os.path.join(PLOT_DIR, f'{model_name.lower()}_metrics.png')
@@ -172,7 +172,7 @@ def plot_training_history(history, filename):
     plt.figure(figsize=(15, 5))
 
     # Plot loss
-    plt.subplot(1, 3, 1)
+    plt.subplot(1, 2, 1)
     plt.plot(history.history['loss'], label='Training Loss')
     plt.plot(history.history['val_loss'], label='Validation Loss')
     plt.title('Model Loss')
@@ -181,13 +181,14 @@ def plot_training_history(history, filename):
     plt.legend()
 
     # Plot accuracy
-    plt.subplot(1, 3, 2)
+    plt.subplot(1, 2, 2)
     plt.plot(history.history['accuracy'], label='Training Accuracy')
     plt.plot(history.history['val_accuracy'], label='Validation Accuracy')
     plt.title('Model Accuracy')
     plt.xlabel('Epoch')
     plt.ylabel('Accuracy')
     plt.legend()
+
 
     plt.tight_layout()
     filepath = os.path.join(PLOT_DIR, filename)
@@ -223,7 +224,6 @@ def main():
         X, y, test_size=0.2, random_state=42, stratify=y
     )
 
-
     # Train and evaluate CNN
     print("\nTraining and evaluating CNN model...")
     cnn_model = create_cnn_model((X.shape[1], X.shape[2]))
@@ -250,24 +250,33 @@ def main():
     # Evaluate CNN
     y_pred_proba = cnn_model.predict(X_test, verbose=0)
     y_pred = (y_pred_proba > 0.5).astype(int)
+
+
+    # Calculate metrics
     cm = confusion_matrix(y_test, y_pred)
-
-    # Calculate CNN metrics
-
+    precision = precision_score(y_test, y_pred)
+    recall = recall_score(y_test, y_pred)
     accuracy = (cm[0, 0] + cm[1, 1]) / cm.sum()
+    f1 = 2 * (precision * recall) / (precision + recall)
 
 
-    cnn_metrics = {
+    metrics = {
         'confusion_matrix': cm,
-        'accuracy': accuracy
+        'precision': precision,
+        'recall': recall,
+        'accuracy': accuracy,
+        'f1': f1
     }
 
     plot_confusion_matrix(cm, 'CNN Confusion Matrix', 'cnn_confusion_matrix.png')
-    plot_metrics(cnn_metrics, 'CNN')
+    plot_metrics(metrics, 'CNN')
 
-    print("\nCNN Results:")
+
+    print("\nResults:")
     print(f"Accuracy: {accuracy:.4f}")
-
+    print(f"Precision: {precision:.4f}")
+    print(f"Recall: {recall:.4f}")
+    print(f"F1-Score: {f1:.4f}")
 
 
 if __name__ == "__main__":

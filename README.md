@@ -38,9 +38,11 @@
 
 
 <h4>Refrences</h4>
-        <div class="section">
-            <p class="highlight">
+        <div>
+            <p>
+                ```bash
                 Data is taken from the
+                ```
             <a  href="https://ieee-dataport.org/open-access/eeg-data-adhd-control-children"> link </a>
             </p>
         </div>
@@ -51,4 +53,31 @@
             <p>
             </p>
         </div>
+
+<h2 style="background-color:blue">Installation required</h2>
+<div>
+Here's the pip installation command for all required libraries:
+
+```bash
+pip install numpy pandas scikit-learn tensorflow matplotlib seaborn
+```
+
+This single command will install all necessary packages:
+- numpy: For numerical computations
+- pandas: For data manipulation and CSV reading
+- scikit-learn: For StandardScaler, train_test_split, and metrics
+- tensorflow: Includes keras for deep learning
+- matplotlib: For plotting
+- seaborn: For enhanced visualizations
+
+Note:
+- tensorflow automatically includes keras
+- pathlib and os are built-in Python libraries, so they don't need installation
+- sys is also a built-in Python library
+
+If you're setting up a new environment, you might want to specify versions for stability:
+```bash
+pip install numpy==1.24.3 pandas==2.0.3 scikit-learn==1.3.0 tensorflow==2.15.0 matplotlib==3.7.2 seaborn==0.12.2
+```
+</div>
 
