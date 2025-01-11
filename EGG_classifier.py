@@ -228,19 +228,13 @@ def main():
     print("\nTraining and evaluating CNN model...")
     cnn_model = create_cnn_model((X.shape[1], X.shape[2]))
 
-    # Create validation split
-    val_size = int(0.2 * len(X_train))
-    X_val = X_train[-val_size:]
-    y_val = y_train[-val_size:]
-    X_train_cnn = X_train[:-val_size]
-    y_train_cnn = y_train[:-val_size]
 
-    # Train CNN
+    # Train CNN directly with validation_split parameter
     history = cnn_model.fit(
-        X_train_cnn, y_train_cnn,
+        X_train, y_train,  # Use full training data
         epochs=100,
         batch_size=16,
-        validation_data=(X_val, y_val),
+        validation_split=0.2,  # Keras will automatically use 20% of data for validation
         verbose=1
     )
 

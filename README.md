@@ -40,9 +40,7 @@
 <h4>Refrences</h4>
         <div>
             <p>
-                ```bash
                 Data is taken from the
-                ```
             <a  href="https://ieee-dataport.org/open-access/eeg-data-adhd-control-children"> link </a>
             </p>
         </div>
