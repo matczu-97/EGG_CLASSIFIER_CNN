@@ -4,8 +4,6 @@ import os
 import sys
 from pathlib import Path
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-from sklearn.svm import SVC
 from sklearn.metrics import classification_report, confusion_matrix, precision_score, recall_score
 import tensorflow as tf
 import matplotlib.pyplot as plt
@@ -18,7 +16,6 @@ from keras.layers import Conv1D, Dense, Dropout, MaxPooling1D, BatchNormalizatio
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 PLOT_DIR = os.path.join(SCRIPT_DIR, 'plots')
 os.makedirs(PLOT_DIR, exist_ok=True)
-
 
 def load_and_preprocess_data(adhd_folder, control_folder, sequence_length=12000):
     """
